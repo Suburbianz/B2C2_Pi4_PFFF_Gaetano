@@ -55,5 +55,10 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data
             .HasForeignKey(c => c.CameraLocationId)
             .OnDelete(DeleteBehavior.Cascade);
         }
+
+        /* public DbSet<AppUserAchievement> AppUserAchievements { get; set; }
+           Disable in order to query AppUserAchievement data directly. */
+
+        public DbSet<B2C2_Pi4_PFFF_Gaetano.Models.AppUserAchievement> AppUserAchievement { get; set; }
     }
 }
