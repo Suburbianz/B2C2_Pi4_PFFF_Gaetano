@@ -4,23 +4,52 @@ using B2C2_Pi4_PFFF_Gaetano.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
+namespace B2C2_Pi4_PFFF_Gaetano.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220930142803_FreshStart202209301627")]
+    partial class FreshStart202209301627
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("Identity")
                 .HasAnnotation("ProductVersion", "6.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.Achievement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Achievements", "Identity");
+                });
 
             modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.AppUser", b =>
                 {
@@ -44,13 +73,16 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("FirstMidName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("FirstName");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -78,6 +110,9 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TotalScore")
+                        .HasColumnType("int");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -95,7 +130,22 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("AspNetUsers", "Identity");
+                });
+
+            modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.AppUserAchievement", b =>
+                {
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("AchievementId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AppUserId", "AchievementId");
+
+                    b.HasIndex("AchievementId");
+
+                    b.ToTable("AppUserAchievement", "Identity");
                 });
 
             modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.Camera", b =>
@@ -106,65 +156,46 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CameraInformationId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CameraLocationId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("CameraInformationId")
-                        .IsUnique();
-
-                    b.HasIndex("CameraLocationId")
-                        .IsUnique();
-
-                    b.ToTable("Cameras");
-                });
-
-            modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.CameraInformation", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DescriptionRemark")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ModelNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("SerialNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.ToTable("CameraInformations");
+                    b.HasIndex("CameraLocationId");
+
+                    b.ToTable("Cameras", "Identity");
                 });
 
             modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.CameraLocation", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -173,23 +204,27 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("HouseNumberAddition")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Region")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("StreetName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ZipCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.ToTable("CameraLocations");
+                    b.ToTable("CameraLocations", "Identity");
                 });
 
             modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.CameraReport", b =>
@@ -200,30 +235,28 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("CameraId")
+                    b.Property<int>("CameraId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("DescriptionRemark")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AppUserId");
+
                     b.HasIndex("CameraId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("CameraReports");
+                    b.ToTable("CameraReports", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -250,7 +283,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("Role", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -275,7 +308,59 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("RoleClaims", "Identity");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("User", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -300,7 +385,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("UserClaims", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -324,7 +409,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("UserLogins", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -339,7 +424,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("UserRoles", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -360,43 +445,56 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("UserTokens", "Identity");
+                });
+
+            modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.AppUserAchievement", b =>
+                {
+                    b.HasOne("B2C2_Pi4_PFFF_Gaetano.Models.Achievement", "Achievement")
+                        .WithMany("AppUserAchievements")
+                        .HasForeignKey("AchievementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("B2C2_Pi4_PFFF_Gaetano.Models.AppUser", "AppUser")
+                        .WithMany("AppUserAchievements")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Achievement");
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.Camera", b =>
                 {
-                    b.HasOne("B2C2_Pi4_PFFF_Gaetano.Models.CameraInformation", "CameraInformation")
-                        .WithOne("Camera")
-                        .HasForeignKey("B2C2_Pi4_PFFF_Gaetano.Models.Camera", "CameraInformationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("B2C2_Pi4_PFFF_Gaetano.Models.CameraLocation", "CameraLocation")
-                        .WithOne("Camera")
-                        .HasForeignKey("B2C2_Pi4_PFFF_Gaetano.Models.Camera", "CameraLocationId")
+                        .WithMany("Cameras")
+                        .HasForeignKey("CameraLocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CameraInformation");
 
                     b.Navigation("CameraLocation");
                 });
 
             modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.CameraReport", b =>
                 {
-                    b.HasOne("B2C2_Pi4_PFFF_Gaetano.Models.Camera", "Camera")
+                    b.HasOne("B2C2_Pi4_PFFF_Gaetano.Models.AppUser", "AppUser")
                         .WithMany("CameraReports")
-                        .HasForeignKey("CameraId");
-
-                    b.HasOne("B2C2_Pi4_PFFF_Gaetano.Models.AppUser", "User")
-                        .WithMany("CameraReports")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Camera");
+                    b.HasOne("B2C2_Pi4_PFFF_Gaetano.Models.Camera", "Camera")
+                        .WithMany("CameraReports")
+                        .HasForeignKey("CameraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Camera");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -450,8 +548,15 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.Achievement", b =>
+                {
+                    b.Navigation("AppUserAchievements");
+                });
+
             modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.AppUser", b =>
                 {
+                    b.Navigation("AppUserAchievements");
+
                     b.Navigation("CameraReports");
                 });
 
@@ -460,16 +565,9 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data.Migrations
                     b.Navigation("CameraReports");
                 });
 
-            modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.CameraInformation", b =>
-                {
-                    b.Navigation("Camera")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("B2C2_Pi4_PFFF_Gaetano.Models.CameraLocation", b =>
                 {
-                    b.Navigation("Camera")
-                        .IsRequired();
+                    b.Navigation("Cameras");
                 });
 #pragma warning restore 612, 618
         }

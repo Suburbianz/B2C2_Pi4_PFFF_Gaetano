@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -100,9 +101,15 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+            [Column("FirstName")]
+            [StringLength(100, ErrorMessage = "Voornaam {0} moet minstens {2} en mag hoogstens {1} karakters bevatten.", MinimumLength = 2)]
             [Display(Name = "Voornaam")]
-            public string FirstName { get; set; }
+            public string FirstMidName { get; set; }
+
+            [Required]
+            [StringLength(100, ErrorMessage = "Achternaam {0} moet minstens {2} en mag hoogstens {1} karakters bevatten.", MinimumLength = 2)]
+            [Display(Name = "Achternaam")]
+            public string LastName { get; set; }
         }
 
 
@@ -122,7 +129,8 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                user.FirstName = Input.FirstName;
+                user.FirstMidName = Input.FirstMidName;
+                user.LastName = Input.LastName;
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
