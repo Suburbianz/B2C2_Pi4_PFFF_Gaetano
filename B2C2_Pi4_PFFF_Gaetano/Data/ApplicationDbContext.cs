@@ -25,36 +25,6 @@ namespace B2C2_Pi4_PFFF_Gaetano.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.HasDefaultSchema("Identity");
-            modelBuilder.Entity<IdentityUser>(entity =>
-            {
-                entity.ToTable(name: "User");
-            });
-            modelBuilder.Entity<IdentityRole>(entity =>
-            {
-                entity.ToTable(name: "Role");
-            });
-            modelBuilder.Entity<IdentityUserRole<string>>(entity =>
-            {
-                entity.ToTable("UserRoles");
-            });
-            modelBuilder.Entity<IdentityUserClaim<string>>(entity =>
-            {
-                entity.ToTable("UserClaims");
-            });
-            modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
-            {
-                entity.ToTable("UserLogins");
-            });
-            modelBuilder.Entity<IdentityRoleClaim<string>>(entity =>
-            {
-                entity.ToTable("RoleClaims");
-            });
-            modelBuilder.Entity<IdentityUserToken<string>>(entity =>
-            {
-                entity.ToTable("UserTokens");
-            });
-
             modelBuilder.Entity<AppUserAchievement>().HasKey(aua => new { aua.AppUserId, aua.AchievementId });
 
             modelBuilder.Entity<AppUserAchievement>()
