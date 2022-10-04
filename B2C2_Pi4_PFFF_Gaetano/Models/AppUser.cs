@@ -16,6 +16,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Models
         [StringLength(50, ErrorMessage = "Voornaam kan niet meer dan 50 karakters bevatten.")]
         [Required(ErrorMessage = "Dit veld moet worden ingevuld")]
         [Column("FirstName")]
+        // [RegularExpression(@"^[A-Z]+[a-z]*$")]
         public string FirstMidName { get; set; }
 
         [DisplayName("Achternaam")]

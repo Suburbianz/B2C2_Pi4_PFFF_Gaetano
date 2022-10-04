@@ -7,16 +7,47 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using B2C2_Pi4_PFFF_Gaetano.Data;
 using B2C2_Pi4_PFFF_Gaetano.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.Data.SqlClient.DataClassification;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Security.Cryptography.X509Certificates;
 
 namespace B2C2_Pi4_PFFF_Gaetano.Controllers
 {
     public class CameraReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private string currentAppUserId;
+        private AppUser currentAppUser;
+
+
+        
 
         public CameraReportsController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        // GET: CameraReports
+        public async Task<List<CameraReport>> GetCameraReports()
+        {
+            var cameraReports = await _context.CameraReports.Include(c => c.AppUser).Include(c => c.Camera).ToListAsync();
+            return cameraReports;
+        }
+
+        // GET: CameraLocations
+        public async Task<List<CameraLocation>> GetCameraLocations()
+        {
+            var cameraLocations = await _context.CameraLocations.Include(c => c.Cameras).ToListAsync();
+            return cameraLocations;
+        }
+
+        // GET: Cameras
+        public async Task<List<Camera>> GetCameras()
+        {
+            var cameras = await _context.Cameras.Include(c => c.CameraLocation).Include(c => c.CameraReports).ToListAsync();
+            return cameras;
         }
 
         // GET: CameraReports
@@ -47,10 +78,9 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
         }
 
         // GET: CameraReports/Create
+        [Authorize]
         public IActionResult Create()
         {
-            ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "Id");
-            ViewData["CameraId"] = new SelectList(_context.Cameras, "Id", "ModelNumber");
             return View();
         }
 
@@ -59,18 +89,114 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CreatedOn,DescriptionRemark,CameraId,AppUserId")] CameraReport cameraReport)
+        //public async Task<IActionResult> Create([Bind("Id,CreatedOn,DescriptionRemark,CameraId,AppUserId")] CameraReport cameraReport)
+        public async Task<IActionResult> Create([Bind("DescriptionRemark")] CameraReport cameraReport)
         {
+            
             if (ModelState.IsValid)
             {
-                _context.Add(cameraReport);
+                var locations = await GetCameraLocations();
+                if (locations.Count != 0)
+                {
+                    // Check if cameraLocation from input already exists.
+                    foreach (CameraLocation cameraLocation in locations)
+                    {
+                        if (cameraLocation.StreetName == ViewData["StreetName"] && true == true)
+                        {
+                            // Check if cameraInfo from input already exists.
+                            foreach (Camera locationCamera in cameraLocation.Cameras)
+                            {
+                                if (locationCamera.Name == ViewData["Name"])
+                                {
+                                    // Add report to camera and currentUser.
+                                    cameraReport.CameraId = locationCamera.Id;
+                                    cameraReport.Camera = locationCamera;
+                                    cameraReport.AppUserId = currentAppUserId;
+                                    cameraReport.AppUser = currentAppUser;
+                                    locationCamera.CameraReports.Add(cameraReport);
+                                    currentAppUser.CameraReports.Add(cameraReport);
+                                    await _context.SaveChangesAsync();
+                                    return RedirectToAction(nameof(Index));
+                                }
+                            }
+                            Camera camera = new Camera();
+
+                            // camera info
+                            camera.Name = Request.Form["Camera.Name"];
+
+                            camera.CameraLocationId = cameraLocation.Id;
+                            camera.CameraLocation = cameraLocation;
+                            // make new list if icollection = null
+                            cameraLocation.Cameras.Add(camera);
+
+                            AddReport(cameraReport, camera);
+
+                            await _context.SaveChangesAsync();
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+                }
+                /*
+                
+                Camera camera = new Camera();
+
+                CameraLocation cameraLocation = new CameraLocation();
+
+                // camera info
+                camera.Name = Request.Form["Camera.Name"];
+                
+                // location info
+                // location.streetname = ...
+
+                camera.CameraLocationId = cameraLocation.Id;
+                camera.CameraLocation = cameraLocation;
+
+                cameraLocation.Cameras = new List<Camera>();
+                cameraLocation.Cameras.Add(cameraReport.Camera);
+                // if list = null, make new
+
+                camera.CameraReports = new List<CameraReport>();
+                camera.CameraReports.Add(cameraReport);
+                currentAppUser.CameraReports = new List<CameraReport>();
+                currentAppUser.CameraReports.Add(cameraReport);
+                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+
+                */
             }
-            ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "Id", cameraReport.AppUserId);
-            ViewData["CameraId"] = new SelectList(_context.Cameras, "Id", "ModelNumber", cameraReport.CameraId);
+
             return View(cameraReport);
         }
+
+        public CameraLocation AddCamera(CameraLocation cameraLocation)
+        {
+
+            return cameraLocation;
+        }
+
+        public Camera AddCamera(Camera camera)
+        {
+
+            return camera;
+        }
+
+        public async Task<IActionResult> AddReport(CameraReport cameraReport, Camera locationCamera)
+        {
+            currentAppUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            currentAppUser = _context.Users.FirstOrDefault(x => x.Id == currentAppUserId);
+
+            cameraReport.CameraId = locationCamera.Id;
+            cameraReport.Camera = locationCamera;
+            cameraReport.AppUserId = currentAppUserId;
+            cameraReport.AppUser = currentAppUser;
+            locationCamera.CameraReports.Add(cameraReport);
+            currentAppUser.CameraReports.Add(cameraReport);
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
 
         // GET: CameraReports/Edit/5
         public async Task<IActionResult> Edit(int? id)

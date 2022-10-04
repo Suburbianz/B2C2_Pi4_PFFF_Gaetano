@@ -14,23 +14,57 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
+                <label asp-for="Camera.Name" class="control-label"></label>
+                <input asp-for="Camera.Name" class="form-control" />
+                <span asp-validation-for="Camera.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera.ModelNumber" class="control-label"></label>
+                <input asp-for="Camera.ModelNumber" class="form-control" />
+                <span asp-validation-for="Camera.ModelNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera.SerialNumber" class="control-label"></label>
+                <input asp-for="Camera.SerialNumber" class="form-control" />
+                <span asp-validation-for="Camera.SerialNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DescriptionRemark" class="control-label"></label>
                 <input asp-for="DescriptionRemark" class="form-control" />
                 <span asp-validation-for="DescriptionRemark" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="CameraId" class="control-label"></label>
-                <select asp-for="CameraId" class ="form-control" asp-items="ViewBag.CameraId"></select>
+                <label asp-for="Camera.CameraLocation.StreetName" class="control-label"></label>
+                <input asp-for="Camera.CameraLocation.StreetName" class="form-control" />
+                <span asp-validation-for="Camera.CameraLocation.StreetName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AppUserId" class="control-label"></label>
-                <select asp-for="AppUserId" class ="form-control" asp-items="ViewBag.AppUserId"></select>
+                <label asp-for="Camera.CameraLocation.HouseNumber" class="control-label"></label>
+                <input asp-for="Camera.CameraLocation.HouseNumber" class="form-control" />
+                <span asp-validation-for="Camera.CameraLocation.HouseNumber" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Camera.CameraLocation.HouseNumberAddition" class="control-label"></label>
+                <input asp-for="Camera.CameraLocation.HouseNumberAddition" class="form-control" />
+                <span asp-validation-for="Camera.CameraLocation.HouseNumberAddition" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera.CameraLocation.ZipCode" class="control-label"></label>
+                <input asp-for="Camera.CameraLocation.ZipCode" class="form-control" />
+                <span asp-validation-for="Camera.CameraLocation.ZipCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera.CameraLocation.City" class="control-label"></label>
+                <input asp-for="Camera.CameraLocation.City" class="form-control" />
+                <span asp-validation-for="Camera.CameraLocation.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera.CameraLocation.Region" class="control-label"></label>
+                <input asp-for="Camera.CameraLocation.Region" class="form-control" />
+                <span asp-validation-for="Camera.CameraLocation.Region" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

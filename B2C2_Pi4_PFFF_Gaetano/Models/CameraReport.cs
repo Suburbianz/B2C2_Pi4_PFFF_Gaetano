@@ -24,12 +24,12 @@ namespace B2C2_Pi4_PFFF_Gaetano.Models
 
         // public string MediaType { get; set; }
 
-        public Camera Camera { get; set; }
+        public Camera? Camera { get; set; }
 
-        public int CameraId { get; set; }
+        public int? CameraId { get; set; }
 
-        public AppUser AppUser { get; set; }
+        public AppUser? AppUser { get; set; }
 
-        public string AppUserId { get; set; }
+        public string? AppUserId { get; set; }
     }
 }

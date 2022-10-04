@@ -1,7 +1,8 @@
-using B2C2_Pi4_PFFF_Gaetano.Data;
+﻿using B2C2_Pi4_PFFF_Gaetano.Data;
 using B2C2_Pi4_PFFF_Gaetano.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using B2C2_Pi4_PFFF_Gaetano.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
