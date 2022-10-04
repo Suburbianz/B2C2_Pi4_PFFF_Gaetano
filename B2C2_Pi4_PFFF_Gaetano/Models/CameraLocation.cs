@@ -20,6 +20,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Models
         public string StreetName { get; set; }
 
         [DisplayName("Huisnummer")]
+        [Range(1, 20000, ErrorMessage = "Huisnummer moet tussen 1 en 20000 zijn.")]
         [Required(ErrorMessage = "Dit veld moet worden ingevuld.")]
         public int HouseNumber { get; set; }
 

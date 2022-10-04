@@ -21,7 +21,6 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
         private string currentAppUserId;
         private AppUser currentAppUser;
 
-
         
 
         public CameraReportsController(ApplicationDbContext context)
@@ -109,79 +108,80 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
                                 if (locationCamera.Name == ViewData["Name"])
                                 {
                                     // Add report to camera and currentUser.
-                                    cameraReport.CameraId = locationCamera.Id;
-                                    cameraReport.Camera = locationCamera;
-                                    cameraReport.AppUserId = currentAppUserId;
-                                    cameraReport.AppUser = currentAppUser;
-                                    locationCamera.CameraReports.Add(cameraReport);
-                                    currentAppUser.CameraReports.Add(cameraReport);
-                                    await _context.SaveChangesAsync();
+                                    AddReport(cameraReport, locationCamera);
                                     return RedirectToAction(nameof(Index));
                                 }
                             }
-                            Camera camera = new Camera();
-
-                            // camera info
-                            camera.Name = Request.Form["Camera.Name"];
-
-                            camera.CameraLocationId = cameraLocation.Id;
-                            camera.CameraLocation = cameraLocation;
-                            // make new list if icollection = null
-                            cameraLocation.Cameras.Add(camera);
+                            Camera camera = AddNewCamera(cameraLocation);
+                            
+                            //cameraLocation.Cameras = new List<Camera>();
+                           //cameraLocation.Cameras.Add(camera);
 
                             AddReport(cameraReport, camera);
-
-                            await _context.SaveChangesAsync();
                             return RedirectToAction(nameof(Index));
                         }
                     }
                 }
-                /*
+                CameraLocation newCameraLocation = AddNewCameraLocation();
+                Camera newCamera = AddNewCamera(newCameraLocation);
                 
-                Camera camera = new Camera();
+                newCamera.CameraLocationId = newCameraLocation.Id;
+                newCamera.CameraLocation = newCameraLocation;
 
-                CameraLocation cameraLocation = new CameraLocation();
+                //-newCameraLocation.Cameras = new List<Camera>();
 
-                // camera info
-                camera.Name = Request.Form["Camera.Name"];
-                
-                // location info
-                // location.streetname = ...
+                //newCameraLocation.Cameras.Add(cameraReport.Camera);
 
-                camera.CameraLocationId = cameraLocation.Id;
-                camera.CameraLocation = cameraLocation;
+                //-newCamera.CameraReports = new List<CameraReport>();
 
-                cameraLocation.Cameras = new List<Camera>();
-                cameraLocation.Cameras.Add(cameraReport.Camera);
-                // if list = null, make new
+                //newCamera.CameraReports.Add(cameraReport);
 
-                camera.CameraReports = new List<CameraReport>();
-                camera.CameraReports.Add(cameraReport);
-                currentAppUser.CameraReports = new List<CameraReport>();
-                currentAppUser.CameraReports.Add(cameraReport);
-                
-                await _context.SaveChangesAsync();
+                //currentAppUser.CameraReports.Add(cameraReport);
+
+                //await _context.SaveChangesAsync();
+                //return RedirectToAction(nameof(Index));
+
+                //-newCameraLocation.Cameras.Add(newCamera);
+                AddReport(cameraReport, newCamera);
                 return RedirectToAction(nameof(Index));
-
-                */
             }
 
             return View(cameraReport);
         }
 
-        public CameraLocation AddCamera(CameraLocation cameraLocation)
+        public CameraLocation AddNewCameraLocation()
         {
+            CameraLocation cameraLocation = new CameraLocation();
+
+            cameraLocation.StreetName = Request.Form["Camera.CameraLocation.StreetName"];
+            cameraLocation.HouseNumber = Int32.Parse(Request.Form["Camera.CameraLocation.HouseNumber"]);
+            if(Request.Form["Camera.CameraLocation.HouseNumberAddition"] != "")
+            {
+                cameraLocation.HouseNumberAddition = Request.Form["Camera.CameraLocation.HouseNumberAddition"];
+            }
+            cameraLocation.ZipCode = Request.Form["Camera.CameraLocation.ZipCode"];
+            cameraLocation.City = Request.Form["Camera.CameraLocation.City"];
+            cameraLocation.Region = Request.Form["Camera.CameraLocation.Region"];
 
             return cameraLocation;
         }
 
-        public Camera AddCamera(Camera camera)
+        public Camera AddNewCamera(CameraLocation cameraLocation)
         {
+            Camera camera = new Camera();
+
+            camera.Name = Request.Form["Camera.Name"];
+            camera.ModelNumber = Request.Form["Camera.ModelNumber"];
+            camera.SerialNumber = Request.Form["Camera.SerialNumber"];
+
+            camera.CameraLocationId = cameraLocation.Id;
+            camera.CameraLocation = cameraLocation;
+
 
             return camera;
         }
 
-        public async Task<IActionResult> AddReport(CameraReport cameraReport, Camera locationCamera)
+        public async void AddReport(CameraReport cameraReport, Camera locationCamera)
         {
             currentAppUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             currentAppUser = _context.Users.FirstOrDefault(x => x.Id == currentAppUserId);
@@ -190,11 +190,15 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
             cameraReport.Camera = locationCamera;
             cameraReport.AppUserId = currentAppUserId;
             cameraReport.AppUser = currentAppUser;
-            locationCamera.CameraReports.Add(cameraReport);
-            currentAppUser.CameraReports.Add(cameraReport);
+            //-locationCamera.CameraReports.Add(cameraReport);
+            //if(currentAppUser.CameraReports == null)
+            //{
+            currentAppUser.CameraReports = new List<CameraReport>();
+            //}
+            //-currentAppUser.CameraReports.Add(cameraReport);
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return;
         }
 
 
