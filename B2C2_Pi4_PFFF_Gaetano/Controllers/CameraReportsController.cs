@@ -12,20 +12,25 @@ using System.Security.Claims;
 using Microsoft.Data.SqlClient.DataClassification;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Identity;
 
 namespace B2C2_Pi4_PFFF_Gaetano.Controllers
 {
     public class CameraReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private string currentAppUserId;
-        private AppUser currentAppUser;
+        private readonly UserManager<AppUser> _userManager;
+        AppUser? _currentAppUser;
+        int scenario;
 
-        
 
-        public CameraReportsController(ApplicationDbContext context)
+
+
+
+        public CameraReportsController(ApplicationDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: CameraReports
@@ -67,6 +72,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
             var cameraReport = await _context.CameraReports
                 .Include(c => c.AppUser)
                 .Include(c => c.Camera)
+                .Include(c => c.Camera.CameraLocation)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cameraReport == null)
             {
@@ -88,65 +94,62 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,CreatedOn,DescriptionRemark,CameraId,AppUserId")] CameraReport cameraReport)
         public async Task<IActionResult> Create([Bind("DescriptionRemark")] CameraReport cameraReport)
         {
-            
+            _currentAppUser = await _userManager.GetUserAsync(User);
             if (ModelState.IsValid)
             {
                 var locations = await GetCameraLocations();
-                if (locations.Count != 0)
+                var cameraForReport = await SearchCameraForReport();
+                var cameraLocationForReport = SearchCameraLocationForReport(locations);
+                if (locations.Count == 0 || (cameraForReport == null && cameraLocationForReport == null))
                 {
-                    // Check if cameraLocation from input already exists.
-                    foreach (CameraLocation cameraLocation in locations)
-                    {
-                        if (cameraLocation.StreetName == ViewData["StreetName"] && true == true)
-                        {
-                            // Check if cameraInfo from input already exists.
-                            foreach (Camera locationCamera in cameraLocation.Cameras)
-                            {
-                                if (locationCamera.Name == ViewData["Name"])
-                                {
-                                    // Add report to camera and currentUser.
-                                    AddReport(cameraReport, locationCamera);
-                                    return RedirectToAction(nameof(Index));
-                                }
-                            }
-                            Camera camera = AddNewCamera(cameraLocation);
-                            
-                            //cameraLocation.Cameras = new List<Camera>();
-                           //cameraLocation.Cameras.Add(camera);
-
-                            AddReport(cameraReport, camera);
-                            return RedirectToAction(nameof(Index));
-                        }
-                    }
+                    scenario = 1;
+                    cameraReport.Camera = AddNewCamera();
+                    cameraReport.Camera.CameraLocation = AddNewCameraLocation();
+                    return FillReportAndSave(cameraReport, _context);
                 }
-                CameraLocation newCameraLocation = AddNewCameraLocation();
-                Camera newCamera = AddNewCamera(newCameraLocation);
-                
-                newCamera.CameraLocationId = newCameraLocation.Id;
-                newCamera.CameraLocation = newCameraLocation;
-
-                //-newCameraLocation.Cameras = new List<Camera>();
-
-                //newCameraLocation.Cameras.Add(cameraReport.Camera);
-
-                //-newCamera.CameraReports = new List<CameraReport>();
-
-                //newCamera.CameraReports.Add(cameraReport);
-
-                //currentAppUser.CameraReports.Add(cameraReport);
-
-                //await _context.SaveChangesAsync();
-                //return RedirectToAction(nameof(Index));
-
-                //-newCameraLocation.Cameras.Add(newCamera);
-                AddReport(cameraReport, newCamera);
-                return RedirectToAction(nameof(Index));
+                else if (cameraForReport == null && cameraLocationForReport != null)
+                {
+                    scenario = 2;
+                    cameraReport.Camera = AddNewCamera();
+                    cameraReport.Camera.CameraLocation = cameraLocationForReport;
+                    return FillReportAndSave(cameraReport, _context);
+                }
+                else if(cameraForReport != null && cameraLocationForReport != null)
+                {
+                    cameraReport.Camera = cameraForReport;
+                    cameraReport.Camera.CameraLocation = cameraLocationForReport;
+                    return FillReportAndSave(cameraReport, _context);
+                }
+                else if(cameraForReport != null && cameraLocationForReport == null)
+                {
+                    // Error
+                }
             }
-
             return View(cameraReport);
+        }
+
+        public async Task<Camera?> SearchCameraForReport()
+        {
+            var cameras = await GetCameras();
+            var cameraForReport = cameras.FirstOrDefault(c =>
+                c.Name == Request.Form["Camera.Name"] &&
+                c.ModelNumber == Request.Form["Camera.ModelNumber"] &&
+                c.SerialNumber == Request.Form["Camera.SerialNumber"]);
+            return cameraForReport;
+        }
+
+        public CameraLocation? SearchCameraLocationForReport(List<CameraLocation> locations)
+        {
+            var cameraLocationForReport = locations.FirstOrDefault(l =>
+                l.StreetName == Request.Form["Camera.CameraLocation.StreetName"] &&
+                l.HouseNumber == Int32.Parse(Request.Form["Camera.CameraLocation.HouseNumber"]) && (
+                l.HouseNumberAddition == Request.Form["Camera.CameraLocation.HouseNumberAddition"] || l.HouseNumberAddition == null) &&
+                l.ZipCode == Request.Form["Camera.CameraLocation.ZipCode"] &&
+                l.City == Request.Form["Camera.CameraLocation.City"] &&
+                l.Region == Request.Form["Camera.CameraLocation.Region"]);
+            return cameraLocationForReport;
         }
 
         public CameraLocation AddNewCameraLocation()
@@ -166,7 +169,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
             return cameraLocation;
         }
 
-        public Camera AddNewCamera(CameraLocation cameraLocation)
+        public Camera AddNewCamera()
         {
             Camera camera = new Camera();
 
@@ -174,31 +177,27 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
             camera.ModelNumber = Request.Form["Camera.ModelNumber"];
             camera.SerialNumber = Request.Form["Camera.SerialNumber"];
 
-            camera.CameraLocationId = cameraLocation.Id;
-            camera.CameraLocation = cameraLocation;
-
-
             return camera;
         }
 
-        public async void AddReport(CameraReport cameraReport, Camera locationCamera)
+        public RedirectToActionResult FillReportAndSave(CameraReport cameraReport, DbContext dbContext)
         {
-            currentAppUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            currentAppUser = _context.Users.FirstOrDefault(x => x.Id == currentAppUserId);
-
-            cameraReport.CameraId = locationCamera.Id;
-            cameraReport.Camera = locationCamera;
-            cameraReport.AppUserId = currentAppUserId;
-            cameraReport.AppUser = currentAppUser;
-            //-locationCamera.CameraReports.Add(cameraReport);
-            //if(currentAppUser.CameraReports == null)
-            //{
-            currentAppUser.CameraReports = new List<CameraReport>();
-            //}
-            //-currentAppUser.CameraReports.Add(cameraReport);
-
-            await _context.SaveChangesAsync();
-            return;
+            cameraReport.CameraId = cameraReport.Camera.Id;
+            cameraReport.Camera.CameraLocationId = cameraReport.Camera.CameraLocation.Id;
+            cameraReport.AppUserId = _currentAppUser.Id;
+            cameraReport.AppUser = _currentAppUser;
+            if(scenario == 1)
+            {
+                _context.Add(cameraReport.Camera);
+                _context.Add(cameraReport.Camera.CameraLocation);
+            }
+            if(scenario == 2)
+            {
+                _context.Add(cameraReport.Camera);
+            }
+            _context.Add(cameraReport);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
         }
 
 

@@ -4,8 +4,8 @@ namespace B2C2_Pi4_PFFF_Gaetano.Models
 {
     public class CameraReportsViewModel
     {
-        public CameraReport CameraReport { get; set; } = new CameraReport();
-        public CameraLocation CameraLocation { get; set; } = new CameraLocation();
-        public Camera Camera { get; set; } = new Camera();
+        public CameraReport? CameraReport { get; set; }
+        public CameraLocation? CameraLocation { get; set; }
+        public Camera? Camera { get; set; }
     }
 }
