@@ -12,29 +12,71 @@
     <h4>CameraReport</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedOn)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CreatedOn)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DescriptionRemark)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.Name)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DescriptionRemark)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.Name)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Camera)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.ModelNumber)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Camera.ModelNumber)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AppUser)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.SerialNumber)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AppUser.Id)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.SerialNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.CameraLocation.StreetName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.CameraLocation.StreetName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.CameraLocation.HouseNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.CameraLocation.HouseNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.CameraLocation.HouseNumberAddition)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.CameraLocation.HouseNumberAddition)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.CameraLocation.ZipCode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.CameraLocation.ZipCode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.CameraLocation.City)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.CameraLocation.City)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.CameraLocation.Region)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.CameraLocation.Region)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CameraImage)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="@Model.CameraImageUrl" />
         </dd>
     </dl>
     

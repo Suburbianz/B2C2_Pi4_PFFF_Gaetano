@@ -13,6 +13,7 @@ using Microsoft.Data.SqlClient.DataClassification;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Identity;
+using B2C2_Pi4_PFFF_Gaetano.ViewModels;
 
 namespace B2C2_Pi4_PFFF_Gaetano.Controllers
 {
@@ -143,7 +144,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
                 }
                 else if(cameraForReport != null && cameraLocationForReport == null)
                 {
-                    // Error
+                    // Error: Camera already exists in another location.
                 }
             }
             return View(cameraReport);
@@ -227,19 +228,32 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
         // GET: CameraReports/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            _currentAppUser = await _userManager.GetUserAsync(User);
             if (id == null || _context.CameraReports == null)
             {
                 return NotFound();
             }
 
-            var cameraReport = await _context.CameraReports.FindAsync(id);
+            var cameraReport = await _context.CameraReports
+                .Include(c => c.AppUser)
+                .Include(c => c.Camera)
+                .Include(c => c.Camera.CameraLocation)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (cameraReport == null)
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "Id", cameraReport.AppUserId);
-            ViewData["CameraId"] = new SelectList(_context.Cameras, "Id", "ModelNumber", cameraReport.CameraId);
-            return View(cameraReport);
+            if (_currentAppUser.Id != cameraReport.AppUserId)
+            {
+                return Forbid();
+            }
+            var editCameraReportsViewModel = new EditCameraReportsViewModel();
+            editCameraReportsViewModel.CameraReportId = cameraReport.Id;
+            editCameraReportsViewModel.CreatedOn = cameraReport.CreatedOn;
+            editCameraReportsViewModel.Camera = cameraReport.Camera;
+            editCameraReportsViewModel.CameraImageUrl = cameraReport.CameraImageUrl;
+            editCameraReportsViewModel.DescriptionRemark = cameraReport.DescriptionRemark;
+            return View(editCameraReportsViewModel);
         }
 
         // POST: CameraReports/Edit/5
@@ -247,15 +261,18 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CreatedOn,DescriptionRemark,CameraId,AppUserId")] CameraReport cameraReport)
+        public async Task<IActionResult> Edit(int id, [Bind("DescriptionRemark,CameraReportId")] EditCameraReportsViewModel editCameraReportsViewModel)
         {
-            if (id != cameraReport.Id)
+            _currentAppUser = await _userManager.GetUserAsync(User);
+            var cameraReport = await _context.CameraReports.FindAsync(id);
+            if (id != editCameraReportsViewModel.CameraReportId)
             {
                 return NotFound();
             }
-
+            
             if (ModelState.IsValid)
             {
+                cameraReport.DescriptionRemark = editCameraReportsViewModel.DescriptionRemark;
                 try
                 {
                     _context.Update(cameraReport);
@@ -282,6 +299,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
         // GET: CameraReports/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            _currentAppUser = await _userManager.GetUserAsync(User);
             if (id == null || _context.CameraReports == null)
             {
                 return NotFound();
@@ -290,12 +308,16 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
             var cameraReport = await _context.CameraReports
                 .Include(c => c.AppUser)
                 .Include(c => c.Camera)
+                .Include(c => c.Camera.CameraLocation)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cameraReport == null)
             {
                 return NotFound();
             }
-
+            if (_currentAppUser.Id != cameraReport.AppUserId)
+            {
+                return Forbid();
+            }
             return View(cameraReport);
         }
 

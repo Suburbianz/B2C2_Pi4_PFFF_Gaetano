@@ -1,4 +1,4 @@
-﻿@model B2C2_Pi4_PFFF_Gaetano.Models.CameraReport
+﻿@model B2C2_Pi4_PFFF_Gaetano.ViewModels.EditCameraReportsViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -9,31 +9,87 @@
 
 <h4>CameraReport</h4>
 <hr />
+<dl class="row">
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.CreatedOn)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.CreatedOn)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Camera.Name)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Camera.Name)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Camera.ModelNumber)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Camera.ModelNumber)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Camera.SerialNumber)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Camera.SerialNumber)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Camera.CameraLocation.StreetName)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Camera.CameraLocation.StreetName)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Camera.CameraLocation.HouseNumber)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Camera.CameraLocation.HouseNumber)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Camera.CameraLocation.HouseNumberAddition)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Camera.CameraLocation.HouseNumberAddition)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Camera.CameraLocation.ZipCode)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Camera.CameraLocation.ZipCode)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Camera.CameraLocation.City)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Camera.CameraLocation.City)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Camera.CameraLocation.Region)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Camera.CameraLocation.Region)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.CameraImage)
+    </dt>
+    <dd class="col-sm-10">
+        <img src="@Model.CameraImageUrl" />
+    </dd>
+</dl>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="CameraReportId" />
+            
             <div class="form-group">
                 <label asp-for="DescriptionRemark" class="control-label"></label>
                 <input asp-for="DescriptionRemark" class="form-control" />
                 <span asp-validation-for="DescriptionRemark" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CameraId" class="control-label"></label>
-                <select asp-for="CameraId" class="form-control" asp-items="ViewBag.CameraId"></select>
-                <span asp-validation-for="CameraId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AppUserId" class="control-label"></label>
-                <select asp-for="AppUserId" class="form-control" asp-items="ViewBag.AppUserId"></select>
-                <span asp-validation-for="AppUserId" class="text-danger"></span>
-            </div>
+            
+            
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
