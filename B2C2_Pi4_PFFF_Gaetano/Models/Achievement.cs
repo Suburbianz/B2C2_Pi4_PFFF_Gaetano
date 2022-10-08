@@ -21,6 +21,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Models
         [Required(ErrorMessage = "Dit veld moet worden ingevuld")]
         public string Content { get; set; }
 
+        [DisplayName("Gemaakt op")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreatedOn { get; set; } = DateTime.Now;

@@ -10,6 +10,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Models
         [Key]
         public int Id { get; set; }
 
+        [DisplayName("Gemaakt op")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreatedOn { get; set; } = DateTime.Now;
@@ -19,10 +20,12 @@ namespace B2C2_Pi4_PFFF_Gaetano.Models
         [Required(ErrorMessage = "Dit veld moet worden ingevuld.")]
         public string DescriptionRemark { get; set; }
 
-        /*[Required]
-        public string MediaUrl { get; set; } */
+        [DisplayName("Foto")]
+        [Required(ErrorMessage = "Er moet een foto worden geüpload.")]
+        [NotMapped]
+        public IFormFile? CameraImage { get; set; }
 
-        // public string MediaType { get; set; }
+        public string? CameraImageUrl { get; set; }
 
         public Camera? Camera { get; set; }
 

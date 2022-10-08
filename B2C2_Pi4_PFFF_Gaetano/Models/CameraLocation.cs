@@ -10,6 +10,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Models
         [Key]
         public int Id { get; set; }
 
+        [DisplayName("Gemaakt op")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreatedOn { get; set; } = DateTime.Now;

@@ -20,6 +20,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         AppUser? _currentAppUser;
         int scenario;
 
@@ -27,10 +28,11 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
 
 
 
-        public CameraReportsController(ApplicationDbContext context, UserManager<AppUser> userManager)
+        public CameraReportsController(ApplicationDbContext context, UserManager<AppUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _userManager = userManager;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: CameraReports
@@ -55,15 +57,19 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
         }
 
         // GET: CameraReports
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.CameraReports.Include(c => c.AppUser).Include(c => c.Camera);
+            _currentAppUser = await _userManager.GetUserAsync(User);
+            var applicationDbContext = _context.CameraReports.Where(c => c.AppUser == _currentAppUser).Include(c => c.AppUser).Include(c => c.Camera).Include(c => c.Camera.CameraLocation);
+            //var userReports = _currentAppUser.CameraReports
             return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: CameraReports/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            _currentAppUser = await _userManager.GetUserAsync(User);
             if (id == null || _context.CameraReports == null)
             {
                 return NotFound();
@@ -78,6 +84,11 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
             {
                 return NotFound();
             }
+            if (_currentAppUser.Id != cameraReport.AppUserId)
+            {
+                return Forbid();
+            }
+            
 
             return View(cameraReport);
         }
@@ -94,11 +105,19 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DescriptionRemark")] CameraReport cameraReport)
+        public async Task<IActionResult> Create([Bind("DescriptionRemark, CameraImage")] CameraReport cameraReport)
         {
             _currentAppUser = await _userManager.GetUserAsync(User);
             if (ModelState.IsValid)
             {
+                if (cameraReport.CameraImage != null)
+                {
+                    string folder = "cameras\\";
+                    folder += Guid.NewGuid().ToString() + "_" + cameraReport.CameraImage.FileName;
+                    string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folder);
+                    await cameraReport.CameraImage.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+                    cameraReport.CameraImageUrl = "/" + folder;
+                }
                 var locations = await GetCameraLocations();
                 var cameraForReport = await SearchCameraForReport();
                 var cameraLocationForReport = SearchCameraLocationForReport(locations);
@@ -190,10 +209,14 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
             {
                 _context.Add(cameraReport.Camera);
                 _context.Add(cameraReport.Camera.CameraLocation);
+                _currentAppUser.TotalScore += 25;
+                _context.Update(_currentAppUser);
             }
             if(scenario == 2)
             {
                 _context.Add(cameraReport.Camera);
+                _currentAppUser.TotalScore += 25;
+                _context.Update(_currentAppUser);
             }
             _context.Add(cameraReport);
             _context.SaveChanges();

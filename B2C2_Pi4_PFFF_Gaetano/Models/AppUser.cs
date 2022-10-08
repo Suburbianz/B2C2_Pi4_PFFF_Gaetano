@@ -8,6 +8,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Models
     public class AppUser : IdentityUser
     {
         // Individual Properties
+        [DisplayName("Gemaakt op")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreatedOn { get; set; } = DateTime.Now;

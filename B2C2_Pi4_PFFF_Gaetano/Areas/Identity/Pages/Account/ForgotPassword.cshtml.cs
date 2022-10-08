@@ -52,6 +52,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
+            /*
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
@@ -78,8 +79,8 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
-
-            return Page();
+            */
+            return RedirectToPage("./ForgotPasswordConfirmation");
         }
     }
 }

@@ -35,6 +35,12 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.AppUser.Id)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CameraImage)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="@Model.CameraImageUrl"/>
+        </dd>
     </dl>
 </div>
 <div>
