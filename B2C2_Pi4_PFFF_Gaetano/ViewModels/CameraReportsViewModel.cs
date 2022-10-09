@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using B2C2_Pi4_PFFF_Gaetano.Models;
 
-namespace B2C2_Pi4_PFFF_Gaetano.Models
+namespace B2C2_Pi4_PFFF_Gaetano.ViewModels
 {
     public class CameraReportsViewModel
     {

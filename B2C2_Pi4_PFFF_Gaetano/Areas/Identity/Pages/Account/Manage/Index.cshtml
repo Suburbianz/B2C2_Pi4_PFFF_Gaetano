@@ -20,6 +20,14 @@
                 <label asp-for="Input.PhoneNumber" class="form-label"></label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
+            <div>
+                <div class="checkbox">
+                    <label asp-for="Input.ShareUserName" class="form-label">
+                        <input class="form-check-input" asp-for="Input.ShareUserName" />
+                        @Html.DisplayNameFor(m => m.Input.ShareUserName)
+                    </label>
+                </div>
+            </div>
             <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
         </form>
     </div>

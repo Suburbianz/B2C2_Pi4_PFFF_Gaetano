@@ -6,10 +6,12 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using B2C2_Pi4_PFFF_Gaetano.Data;
 using B2C2_Pi4_PFFF_Gaetano.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
 {
@@ -17,13 +19,17 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly ApplicationDbContext _context;
+        AppUser? _currentAppUser;
 
         public IndexModel(
             UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager)
+            SignInManager<AppUser> signInManager,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         /// <summary>
@@ -59,18 +65,24 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "Andere geberuikers mogen mijn gebruikersnaam en aantal gemelde camera's zien")]
+            public bool ShareUserName { get; set; }
         }
 
         private async Task LoadAsync(AppUser user)
         {
+            _currentAppUser = await _userManager.GetUserAsync(User);
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var shareUserName = _currentAppUser.ShareUserName;
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                ShareUserName = shareUserName
             };
         }
 
@@ -88,6 +100,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
+            _currentAppUser = await _userManager.GetUserAsync(User);
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -101,6 +114,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var shareUserName = _currentAppUser.ShareUserName;
             if (Input.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
@@ -110,9 +124,15 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+            if (Input.ShareUserName != shareUserName)
+            {
+                _currentAppUser.ShareUserName = Input.ShareUserName;
+                _context.Update(_currentAppUser);
+                _context.SaveChanges();
+            }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "Uw profiel is bijgewerkt.";
             return RedirectToPage();
         }
     }

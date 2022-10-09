@@ -1,4 +1,6 @@
-﻿using B2C2_Pi4_PFFF_Gaetano.Models;
+﻿using B2C2_Pi4_PFFF_Gaetano.Data;
+using B2C2_Pi4_PFFF_Gaetano.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,10 +9,12 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -18,9 +22,11 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        [Authorize]
+        public IActionResult Leaderboard()
         {
-            return View();
+            var applicationDbContext = _context.Users.Where(c => c.ShareUserName == true).OrderByDescending(u => u.TotalScore).ToList();
+            return View(applicationDbContext);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

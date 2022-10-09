@@ -81,6 +81,9 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            [Required]
+            [Display(Name = "Gebruikersnaam")]
+            public string UserName { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -100,16 +103,19 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            [Required]
+            
             [Column("FirstName")]
             [StringLength(100, ErrorMessage = "Voornaam {0} moet minstens {2} en mag hoogstens {1} karakters bevatten.", MinimumLength = 2)]
             [Display(Name = "Voornaam")]
             public string FirstMidName { get; set; }
 
-            [Required]
+            
             [StringLength(100, ErrorMessage = "Achternaam {0} moet minstens {2} en mag hoogstens {1} karakters bevatten.", MinimumLength = 2)]
             [Display(Name = "Achternaam")]
             public string LastName { get; set; }
+
+            [Display(Name = "Andere geberuikers mogen mijn gebruikersnaam en aantal gemelde camera's zien")]
+            public bool ShareUserName { get; set; } = false;
         }
 
 
@@ -127,10 +133,11 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 user.FirstMidName = Input.FirstMidName;
                 user.LastName = Input.LastName;
+                user.ShareUserName = Input.ShareUserName;
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

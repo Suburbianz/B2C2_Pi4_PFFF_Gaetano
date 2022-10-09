@@ -72,6 +72,10 @@
                 <span asp-validation-for="Camera.CameraLocation.Region" class="text-danger"></span>
             </div>
 
+            <div>
+                <label class="text-danger">@ViewBag.ErrorMessage</label>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

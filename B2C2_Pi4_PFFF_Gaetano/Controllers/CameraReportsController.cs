@@ -36,12 +36,8 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        // GET: CameraReports
-        public async Task<List<CameraReport>> GetCameraReports()
-        {
-            var cameraReports = await _context.CameraReports.Include(c => c.AppUser).Include(c => c.Camera).ToListAsync();
-            return cameraReports;
-        }
+        [TempData]
+        public string StatusMessage { get; set; }
 
         // GET: CameraLocations
         public async Task<List<CameraLocation>> GetCameraLocations()
@@ -111,14 +107,6 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
             _currentAppUser = await _userManager.GetUserAsync(User);
             if (ModelState.IsValid)
             {
-                if (cameraReport.CameraImage != null)
-                {
-                    string folder = "cameras\\";
-                    folder += Guid.NewGuid().ToString() + "_" + cameraReport.CameraImage.FileName;
-                    string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folder);
-                    await cameraReport.CameraImage.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
-                    cameraReport.CameraImageUrl = "/" + folder;
-                }
                 var locations = await GetCameraLocations();
                 var cameraForReport = await SearchCameraForReport();
                 var cameraLocationForReport = SearchCameraLocationForReport(locations);
@@ -127,28 +115,29 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
                     scenario = 1;
                     cameraReport.Camera = AddNewCamera();
                     cameraReport.Camera.CameraLocation = AddNewCameraLocation();
-                    return FillReportAndSave(cameraReport, _context);
+                    return await FillReportAndSave(cameraReport, _context);
                 }
                 else if (cameraForReport == null && cameraLocationForReport != null)
                 {
                     scenario = 2;
                     cameraReport.Camera = AddNewCamera();
                     cameraReport.Camera.CameraLocation = cameraLocationForReport;
-                    return FillReportAndSave(cameraReport, _context);
+                    return await FillReportAndSave(cameraReport, _context);
                 }
-                else if(cameraForReport != null && cameraLocationForReport != null)
+                else if(cameraForReport != null && (cameraLocationForReport != null && cameraForReport.CameraLocation == cameraLocationForReport))
                 {
                     cameraReport.Camera = cameraForReport;
                     cameraReport.Camera.CameraLocation = cameraLocationForReport;
-                    return FillReportAndSave(cameraReport, _context);
+                    return await FillReportAndSave(cameraReport, _context);
                 }
-                else if(cameraForReport != null && cameraLocationForReport == null)
+                else if(cameraForReport != null && (cameraLocationForReport == null || cameraForReport.CameraLocation != cameraLocationForReport))
                 {
-                    // Error: Camera already exists in another location.
+                    ViewBag.ErrorMessage = "De camera die u probeert te rapporteren is al op een andere locatie gemeld.\nNeem voor meer informatie contact op met de websitebeheerder.";
                 }
             }
             return View(cameraReport);
         }
+
 
         public async Task<Camera?> SearchCameraForReport()
         {
@@ -200,8 +189,17 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
             return camera;
         }
 
-        public RedirectToActionResult FillReportAndSave(CameraReport cameraReport, DbContext dbContext)
+        public async Task<RedirectToActionResult> FillReportAndSave(CameraReport cameraReport, DbContext dbContext)
         {
+            if (cameraReport.CameraImage != null)
+            {
+                string folder = "cameras\\";
+                folder += Guid.NewGuid().ToString() + "_" + cameraReport.CameraImage.FileName;
+                string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folder);
+                await cameraReport.CameraImage.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+                cameraReport.CameraImageUrl = "/" + folder;
+            }
+
             cameraReport.CameraId = cameraReport.Camera.Id;
             cameraReport.Camera.CameraLocationId = cameraReport.Camera.CameraLocation.Id;
             cameraReport.AppUserId = _currentAppUser.Id;

@@ -15,19 +15,19 @@ namespace B2C2_Pi4_PFFF_Gaetano.Models
 
         [DisplayName("Voornaam")]
         [StringLength(50, ErrorMessage = "Voornaam kan niet meer dan 50 karakters bevatten.")]
-        [Required(ErrorMessage = "Dit veld moet worden ingevuld")]
         [Column("FirstName")]
         // [RegularExpression(@"^[A-Z]+[a-z]*$")]
-        public string FirstMidName { get; set; }
+        public string? FirstMidName { get; set; }
 
         [DisplayName("Achternaam")]
         [StringLength(50, ErrorMessage = "Achternaam kan niet meer dan 50 karakters bevatten.")]
-        [Required(ErrorMessage = "Dit veld moet worden ingevuld")]
-        public string LastName { get; set; }
+        
+        public string? LastName { get; set; }
 
         // public string ProfilePictureUrl { get; set; }
 
-        // public string PrivacySetting { get; set; }
+        [Display(Name = "Andere geberuikers mogen mijn gebruikersnaam en aantal gemelde camera's zien")]
+        public bool ShareUserName { get; set; } = false;
 
         public int TotalScore { get; set; } = 0;
 
