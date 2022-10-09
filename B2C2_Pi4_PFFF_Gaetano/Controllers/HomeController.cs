@@ -29,6 +29,11 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
             return View(applicationDbContext);
         }
 
+        public IActionResult CameraMap()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
