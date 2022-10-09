@@ -29,6 +29,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Models
         [Display(Name = "Andere gebruikers mogen mijn gebruikersnaam en aantal gemelde camera's zien")]
         public bool ShareUserName { get; set; } = false;
 
+        [Display(Name = "Aantal punten")]
         public int TotalScore { get; set; } = 0;
 
         // Lists

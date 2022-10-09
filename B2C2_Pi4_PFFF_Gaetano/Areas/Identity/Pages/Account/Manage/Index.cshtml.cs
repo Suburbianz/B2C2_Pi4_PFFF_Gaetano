@@ -36,8 +36,11 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        [Display(Name = "Gebruikersnaam")]
         public string Username { get; set; }
 
+        [Display(Name = "Aantal punten")]
+        public int TotalScore { get; set; }
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -76,7 +79,9 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var shareUserName = _currentAppUser.ShareUserName;
+            var totalScore = _currentAppUser.TotalScore;
 
+            TotalScore = totalScore;
             Username = userName;
 
             Input = new InputModel
