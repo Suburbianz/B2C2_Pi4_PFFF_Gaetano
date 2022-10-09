@@ -62,7 +62,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Kan gebruiker met ID '{_userManager.GetUserId(User)}' niet laden.");
             }
 
             RequirePassword = await _userManager.HasPasswordAsync(user);
@@ -74,7 +74,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Kan gebruiker met ID '{_userManager.GetUserId(User)}' niet laden.");
             }
 
             RequirePassword = await _userManager.HasPasswordAsync(user);
@@ -82,7 +82,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
             {
                 if (!await _userManager.CheckPasswordAsync(user, Input.Password))
                 {
-                    ModelState.AddModelError(string.Empty, "Incorrect password.");
+                    ModelState.AddModelError(string.Empty, "Onjuist wachtwoord.");
                     return Page();
                 }
             }
@@ -91,12 +91,12 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
             var userId = await _userManager.GetUserIdAsync(user);
             if (!result.Succeeded)
             {
-                throw new InvalidOperationException($"Unexpected error occurred deleting user.");
+                throw new InvalidOperationException($"Onverwachte fout opgetreden tijdens het verwijderen van de gebruiker.");
             }
 
             await _signInManager.SignOutAsync();
 
-            _logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);
+            _logger.LogInformation("Gebruiker met ID '{UserId}' heeft zichzelf verwijderd.", userId);
 
             return Redirect("~/");
         }

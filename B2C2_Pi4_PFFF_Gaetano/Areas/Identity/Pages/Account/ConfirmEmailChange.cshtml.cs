@@ -42,14 +42,14 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{userId}'.");
+                return NotFound($"Kan gebruiker met ID '{userId}' niet laden.");
             }
 
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ChangeEmailAsync(user, email, code);
             if (!result.Succeeded)
             {
-                StatusMessage = "Error changing email.";
+                StatusMessage = "Fout tijdens het wijzigen van mail.";
                 return Page();
             }
 
@@ -58,12 +58,12 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
             var setUserNameResult = await _userManager.SetUserNameAsync(user, email);
             if (!setUserNameResult.Succeeded)
             {
-                StatusMessage = "Error changing user name.";
+                StatusMessage = "Fout tijdens het wijzigen van gebruikersnaam.";
                 return Page();
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Thank you for confirming your email change.";
+            StatusMessage = "Bedankt voor het bevestigen van de wijziging.";
             return Page();
         }
     }

@@ -26,7 +26,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Models
 
         // public string ProfilePictureUrl { get; set; }
 
-        [Display(Name = "Andere geberuikers mogen mijn gebruikersnaam en aantal gemelde camera's zien")]
+        [Display(Name = "Andere gebruikers mogen mijn gebruikersnaam en aantal gemelde camera's zien")]
         public bool ShareUserName { get; set; } = false;
 
         public int TotalScore { get; set; } = 0;

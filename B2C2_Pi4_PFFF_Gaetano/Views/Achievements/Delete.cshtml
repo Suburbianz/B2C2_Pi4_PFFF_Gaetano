@@ -5,9 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Delete</h1>
+<h1>Achievement verwijderen</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Weet u zeker dat u deze achievement wil verwijderen?</h3>
 <div>
     <h4>Achievement</h4>
     <hr />
@@ -32,9 +32,9 @@
         </dd>
     </dl>
     
-    <form asp-action="Delete">
+    <form asp-action="Verwijderen">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index">Terug naar lijst van achievements</a>
     </form>
 </div>

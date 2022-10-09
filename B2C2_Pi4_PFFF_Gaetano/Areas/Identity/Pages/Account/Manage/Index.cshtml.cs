@@ -63,10 +63,10 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "Telefoonnummer")]
             public string PhoneNumber { get; set; }
 
-            [Display(Name = "Andere geberuikers mogen mijn gebruikersnaam en aantal gemelde camera's zien")]
+            [Display(Name = "Andere gebruikers mogen mijn gebruikersnaam en aantal gemelde camera's zien")]
             public bool ShareUserName { get; set; }
         }
 
@@ -91,7 +91,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Kan gebruiker met ID '{_userManager.GetUserId(User)}' niet laden.");
             }
 
             await LoadAsync(user);
@@ -104,7 +104,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Kan gebruiker met ID '{_userManager.GetUserId(User)}' niet laden.");
             }
 
             if (!ModelState.IsValid)
@@ -120,7 +120,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    StatusMessage = "Onverwachte fout opgetreden tijdens het wijzigen van het telefoonnummer.";
                     return RedirectToPage();
                 }
             }

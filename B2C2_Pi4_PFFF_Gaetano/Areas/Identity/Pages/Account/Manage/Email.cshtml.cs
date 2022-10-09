@@ -70,7 +70,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
             /// </summary>
             [Required]
             [EmailAddress]
-            [Display(Name = "New email")]
+            [Display(Name = "Nieuw e-mailadres")]
             public string NewEmail { get; set; }
         }
 
@@ -92,7 +92,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Kan gebruiker met ID '{_userManager.GetUserId(User)}' niet laden.");
             }
 
             await LoadAsync(user);
@@ -104,7 +104,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Kan gebruiker met ID '{_userManager.GetUserId(User)}' niet laden.");
             }
 
             if (!ModelState.IsValid)
@@ -126,23 +126,24 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
                     protocol: Request.Scheme);
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Bevestig uw e-mailadres",
+                    $"Gelieve uw account te bevestigen door <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>hier te klikken</a>.");
 
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
+                StatusMessage = "Bevestigingslink om e-mailadres te wijzigen verstuurd. Bekijk aub uw inbox.";
                 return RedirectToPage();
             }
 
-            StatusMessage = "Your email is unchanged.";
+            StatusMessage = "Uw e-mailadres is onveranderd.";
             return RedirectToPage();
         }
 
+        /*
         public async Task<IActionResult> OnPostSendVerificationEmailAsync()
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Kan gebruiker met ID '{_userManager.GetUserId(User)}' niet laden.");
             }
 
             if (!ModelState.IsValid)
@@ -162,11 +163,12 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account.Manage
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
                 email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                "Bevestig uw e-mailadres",
+                    $"Gelieve uw account te bevestigen door <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>hier te klikken</a>.");
 
-            StatusMessage = "Verification email sent. Please check your email.";
+            StatusMessage = "Bevestigingslink om e-mailadres te wijzigen verstuurd. Bekijk aub uw inbox.";
             return RedirectToPage();
         }
+        */
     }
 }
