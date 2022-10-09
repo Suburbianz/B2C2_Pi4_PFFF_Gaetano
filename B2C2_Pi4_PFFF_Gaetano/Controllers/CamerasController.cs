@@ -25,7 +25,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
             var applicationDbContext = _context.Cameras.Include(c => c.CameraLocation);
             return View(await applicationDbContext.ToListAsync());
         }
-
+        /*
         // GET: Cameras/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -164,5 +164,6 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers
         {
           return _context.Cameras.Any(e => e.Id == id);
         }
+        */
     }
 }

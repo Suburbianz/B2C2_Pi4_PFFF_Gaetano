@@ -7,14 +7,11 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedOn)
+                Eerste melding
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -26,7 +23,22 @@
                 @Html.DisplayNameFor(model => model.SerialNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CameraLocation)
+                @Html.DisplayNameFor(model => model.CameraLocation.StreetName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CameraLocation.HouseNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CameraLocation.HouseNumberAddition)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CameraLocation.ZipCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CameraLocation.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CameraLocation.Region)
             </th>
             <th></th>
         </tr>
@@ -47,12 +59,22 @@
                 @Html.DisplayFor(modelItem => item.SerialNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CameraLocation.City)
+                @Html.DisplayNameFor(model => model.CameraLocation.StreetName)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.DisplayNameFor(model => model.CameraLocation.HouseNumber)
+            </td>
+            <td>
+                @Html.DisplayNameFor(model => model.CameraLocation.HouseNumberAddition)
+            </td>
+            <td>
+                @Html.DisplayNameFor(model => model.CameraLocation.ZipCode)
+            </td>
+            <td>
+                @Html.DisplayNameFor(model => model.CameraLocation.City)
+            </td>
+            <td>
+                @Html.DisplayNameFor(model => model.CameraLocation.Region)
             </td>
         </tr>
 }
