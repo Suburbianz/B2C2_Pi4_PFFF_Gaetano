@@ -78,7 +78,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [EmailAddress]
-            [Display(Name = "Email")]
+            [Display(Name = "E-mailadres")]
             public string Email { get; set; }
 
             [Required]
@@ -91,7 +91,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Wachtwoord")]
             public string Password { get; set; }
 
             /// <summary>
@@ -99,11 +99,11 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
+            [Display(Name = "Bevestig wachtwoord")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            
+            /*
             [Column("FirstName")]
             [StringLength(100, ErrorMessage = "Voornaam {0} moet minstens {2} en mag hoogstens {1} karakters bevatten.", MinimumLength = 2)]
             [Display(Name = "Voornaam")]
@@ -113,6 +113,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
             [StringLength(100, ErrorMessage = "Achternaam {0} moet minstens {2} en mag hoogstens {1} karakters bevatten.", MinimumLength = 2)]
             [Display(Name = "Achternaam")]
             public string LastName { get; set; }
+            */
 
             [Display(Name = "Andere geberuikers mogen mijn gebruikersnaam en aantal gemelde camera's zien")]
             public bool ShareUserName { get; set; } = false;
@@ -135,8 +136,10 @@ namespace B2C2_Pi4_PFFF_Gaetano.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                /*
                 user.FirstMidName = Input.FirstMidName;
                 user.LastName = Input.LastName;
+                */
                 user.ShareUserName = Input.ShareUserName;
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
