@@ -1,0 +1,90 @@
+﻿@model B2C2_Pi4_PFFF_Gaetano.Models.CameraReport
+
+@{
+    ViewData["Title"] = "Camera rapporteren";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h4>Camera rapporteren</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Camera.Name" class="control-label"></label>
+                <input asp-for="Camera.Name" class="form-control" />
+                <span asp-validation-for="Camera.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera.ModelNumber" class="control-label"></label>
+                <input asp-for="Camera.ModelNumber" class="form-control" />
+                <span asp-validation-for="Camera.ModelNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera.SerialNumber" class="control-label"></label>
+                <input asp-for="Camera.SerialNumber" class="form-control" />
+                <span asp-validation-for="Camera.SerialNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DescriptionRemark" class="control-label"></label>
+                <input asp-for="DescriptionRemark" class="form-control" />
+                <span asp-validation-for="DescriptionRemark" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera.CameraLocation.StreetName" class="control-label"></label>
+                <input asp-for="Camera.CameraLocation.StreetName" class="form-control" />
+                <span asp-validation-for="Camera.CameraLocation.StreetName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera.CameraLocation.HouseNumber" class="control-label"></label>
+                <input asp-for="Camera.CameraLocation.HouseNumber" class="form-control" />
+                <span asp-validation-for="Camera.CameraLocation.HouseNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera.CameraLocation.HouseNumberAddition" class="control-label"></label>
+                <input asp-for="Camera.CameraLocation.HouseNumberAddition" class="form-control" />
+                <span asp-validation-for="Camera.CameraLocation.HouseNumberAddition" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera.CameraLocation.ZipCode" class="control-label"></label>
+                <input asp-for="Camera.CameraLocation.ZipCode" class="form-control" />
+                <span asp-validation-for="Camera.CameraLocation.ZipCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera.CameraLocation.City" class="control-label"></label>
+                <input asp-for="Camera.CameraLocation.City" class="form-control" />
+                <span asp-validation-for="Camera.CameraLocation.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Camera.CameraLocation.Region" class="control-label"></label>
+                <input asp-for="Camera.CameraLocation.Region" class="form-control" />
+                <span asp-validation-for="Camera.CameraLocation.Region" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CameraImage" class="control-label"></label>
+                <div class="custom-file">
+                    <input asp-for="CameraImage" class="custom-file-input" id="customFile" />
+                    <label class="custom-file-label" for="customFile">Kies bestand</label>
+                </div>
+                <span asp-validation-for="CameraImage" class="text-danger"></span>
+            </div>
+            <div>
+                <label class="text-danger">@ViewBag.ErrorMessage</label>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Rapporteren" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Terug naar lijst van gemelde camera's</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

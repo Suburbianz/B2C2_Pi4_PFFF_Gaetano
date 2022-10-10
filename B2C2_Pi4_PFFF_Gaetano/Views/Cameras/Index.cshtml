@@ -1,0 +1,82 @@
+﻿@model IEnumerable<B2C2_Pi4_PFFF_Gaetano.Models.Camera>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Camera's</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Eerste melding
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModelNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SerialNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CameraLocation.StreetName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CameraLocation.HouseNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CameraLocation.HouseNumberAddition)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CameraLocation.ZipCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CameraLocation.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CameraLocation.Region)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModelNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SerialNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CameraLocation.StreetName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CameraLocation.HouseNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CameraLocation.HouseNumberAddition)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CameraLocation.ZipCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CameraLocation.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CameraLocation.Region)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

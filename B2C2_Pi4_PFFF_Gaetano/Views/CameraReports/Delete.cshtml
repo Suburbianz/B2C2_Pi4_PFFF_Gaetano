@@ -1,0 +1,92 @@
+﻿@model B2C2_Pi4_PFFF_Gaetano.Models.CameraReport
+
+@{
+    ViewData["Title"] = "Cameramelding verwijderen";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Cameramelding verwijderen</h1>
+
+<h3>Weet u zeker dat u deze cameramelding wilt verwijderen?</h3>
+<div>
+    <h4>CameraReport</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreatedOn)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.ModelNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.ModelNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.SerialNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.SerialNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.CameraLocation.StreetName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.CameraLocation.StreetName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.CameraLocation.HouseNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.CameraLocation.HouseNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.CameraLocation.HouseNumberAddition)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.CameraLocation.HouseNumberAddition)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.CameraLocation.ZipCode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.CameraLocation.ZipCode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.CameraLocation.City)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.CameraLocation.City)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Camera.CameraLocation.Region)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Camera.CameraLocation.Region)
+        </dd>
+        @if (Model.CameraImageUrl != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CameraImage)
+            </dt>
+            <dd class="col-sm-10">
+
+                <img src="@Model.CameraImageUrl" />
+            </dd>
+        }
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Verwijderen" class="btn btn-danger" /> |
+        <a asp-action="Index">Terug naar lijst van gemelde camera's</a>
+    </form>
+</div>
