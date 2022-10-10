@@ -21,7 +21,6 @@ namespace B2C2_Pi4_PFFF_Gaetano.Models
         public string DescriptionRemark { get; set; }
 
         [DisplayName("Foto")]
-        [Required(ErrorMessage = "Er moet een foto worden geüpload.")]
         [NotMapped]
         public IFormFile? CameraImage { get; set; }
 

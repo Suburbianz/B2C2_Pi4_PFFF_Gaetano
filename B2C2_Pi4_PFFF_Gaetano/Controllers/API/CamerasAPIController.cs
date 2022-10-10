@@ -12,49 +12,47 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CameraReportsAPIController : ControllerBase
+    public class CamerasAPIController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public CameraReportsAPIController(ApplicationDbContext context)
+        public CamerasAPIController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/CameraReportsAPI
+        // GET: api/CamerasAPI
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CameraReport>>> GetCameraReports()
+        public async Task<ActionResult<IEnumerable<Camera>>> GetCameras()
         {
-            return await _context.CameraReports
-                .ToListAsync();
+            return await _context.Cameras.ToListAsync();
         }
 
-        // GET: api/CameraReportsAPI/5
+        // GET: api/CamerasAPI/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CameraReport>> GetCameraReport(int id)
+        public async Task<ActionResult<Camera>> GetCamera(int id)
         {
-            var cameraReport = await _context.CameraReports.FindAsync(id);
+            var camera = await _context.Cameras.FindAsync(id);
 
-            if (cameraReport == null)
+            if (camera == null)
             {
                 return NotFound();
             }
 
-            return cameraReport;
+            return camera;
         }
-
-
-        // PUT: api/CameraReportsAPI/5
+        /*
+        // PUT: api/CamerasAPI/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCameraReport(int id, CameraReport cameraReport)
+        public async Task<IActionResult> PutCamera(int id, Camera camera)
         {
-            if (id != cameraReport.Id)
+            if (id != camera.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(cameraReport).State = EntityState.Modified;
+            _context.Entry(camera).State = EntityState.Modified;
 
             try
             {
@@ -62,7 +60,7 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers.API
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CameraReportExists(id))
+                if (!CameraExists(id))
                 {
                     return NotFound();
                 }
@@ -75,39 +73,37 @@ namespace B2C2_Pi4_PFFF_Gaetano.Controllers.API
             return NoContent();
         }
 
-
-        /*
-        // POST: api/CameraReportsAPI
+        // POST: api/CamerasAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CameraReport>> PostCameraReport(CameraReport cameraReport)
+        public async Task<ActionResult<Camera>> PostCamera(Camera camera)
         {
-            _context.CameraReports.Add(cameraReport);
+            _context.Cameras.Add(camera);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCameraReport", new { id = cameraReport.Id }, cameraReport);
+            return CreatedAtAction("GetCamera", new { id = camera.Id }, camera);
         }
-        */
 
-        // DELETE: api/CameraReportsAPI/5
+        // DELETE: api/CamerasAPI/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCameraReport(int id)
+        public async Task<IActionResult> DeleteCamera(int id)
         {
-            var cameraReport = await _context.CameraReports.FindAsync(id);
-            if (cameraReport == null)
+            var camera = await _context.Cameras.FindAsync(id);
+            if (camera == null)
             {
                 return NotFound();
             }
 
-            _context.CameraReports.Remove(cameraReport);
+            _context.Cameras.Remove(camera);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CameraReportExists(int id)
+        private bool CameraExists(int id)
         {
-            return _context.CameraReports.Any(e => e.Id == id);
+            return _context.Cameras.Any(e => e.Id == id);
         }
+        */
     }
 }

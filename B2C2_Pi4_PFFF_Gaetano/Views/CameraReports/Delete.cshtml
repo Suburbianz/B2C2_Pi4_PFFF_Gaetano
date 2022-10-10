@@ -72,17 +72,21 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Camera.CameraLocation.Region)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CameraImage)
-        </dt>
-        <dd class="col-sm-10">
-            <img src="@Model.CameraImageUrl" />
-        </dd>
+        @if (Model.CameraImageUrl != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CameraImage)
+            </dt>
+            <dd class="col-sm-10">
+
+                <img src="@Model.CameraImageUrl" />
+            </dd>
+        }
     </dl>
     
-    <form asp-action="Verwijderen">
+    <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="Verwijderen" class="btn btn-danger" /> |
         <a asp-action="Index">Terug naar lijst van gemelde camera's</a>
     </form>
 </div>

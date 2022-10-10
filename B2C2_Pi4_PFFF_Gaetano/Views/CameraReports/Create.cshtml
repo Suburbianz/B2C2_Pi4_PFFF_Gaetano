@@ -33,14 +33,6 @@
                 <span asp-validation-for="DescriptionRemark" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CameraImage" class="control-label"></label>
-                <div class="custom-file">
-                    <input asp-for="CameraImage" class="custom-file-input" id="customFile" />
-                    <label class="custom-file-label" for="customFile">Kies bestand</label>
-                </div>
-                <span asp-validation-for="CameraImage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Camera.CameraLocation.StreetName" class="control-label"></label>
                 <input asp-for="Camera.CameraLocation.StreetName" class="form-control" />
                 <span asp-validation-for="Camera.CameraLocation.StreetName" class="text-danger"></span>
@@ -70,7 +62,14 @@
                 <input asp-for="Camera.CameraLocation.Region" class="form-control" />
                 <span asp-validation-for="Camera.CameraLocation.Region" class="text-danger"></span>
             </div>
-
+            <div class="form-group">
+                <label asp-for="CameraImage" class="control-label"></label>
+                <div class="custom-file">
+                    <input asp-for="CameraImage" class="custom-file-input" id="customFile" />
+                    <label class="custom-file-label" for="customFile">Kies bestand</label>
+                </div>
+                <span asp-validation-for="CameraImage" class="text-danger"></span>
+            </div>
             <div>
                 <label class="text-danger">@ViewBag.ErrorMessage</label>
             </div>
